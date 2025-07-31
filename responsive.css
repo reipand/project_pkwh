@@ -1,0 +1,524 @@
+/* =====================================================
+   Responsive CSS untuk SMP Bina Informatika
+   ===================================================== */
+
+/* ===== LARGE DESKTOP (1200px and up) ===== */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1140px;
+    }
+    
+    .hero-title {
+        font-size: 4rem;
+    }
+    
+    .section-title {
+        font-size: 3rem;
+    }
+    
+    .registration-form {
+        padding: 4rem;
+    }
+}
+
+/* ===== DESKTOP (992px to 1199px) ===== */
+@media (max-width: 1199px) and (min-width: 992px) {
+    .hero-title {
+        font-size: 3.5rem;
+    }
+    
+    .section-title {
+        font-size: 2.5rem;
+    }
+    
+    .procedure-card {
+        padding: 1.5rem;
+    }
+}
+
+/* ===== TABLET (768px to 991px) ===== */
+@media (max-width: 991px) and (min-width: 768px) {
+    .hero-title {
+        font-size: 3rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.3rem;
+    }
+    
+    .section-title {
+        font-size: 2.2rem;
+    }
+    
+    .hero-description {
+        font-size: 1rem;
+    }
+    
+    .navbar-nav {
+        text-align: center;
+    }
+    
+    .navbar-nav .nav-link {
+        padding: 0.5rem 1rem;
+        margin: 0.25rem 0;
+    }
+    
+    .login-btn {
+        margin-top: 0.5rem;
+    }
+    
+    .registration-form {
+        padding: 2.5rem;
+    }
+    
+    .procedure-card {
+        margin-bottom: 1.5rem;
+    }
+    
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+    
+    .contact-info {
+        margin-bottom: 1.5rem;
+    }
+}
+
+/* ===== MOBILE LARGE (576px to 767px) ===== */
+@media (max-width: 767px) and (min-width: 576px) {
+    .hero-title {
+        font-size: 2.5rem;
+        line-height: 1.2;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.3rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .hero-description {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+        max-width: 600px;
+    }
+    
+    .section-title {
+        font-size: 2.2rem;
+        margin-bottom: 2.5rem;
+    }
+    
+    .section {
+        padding: 4rem 0;
+    }
+    
+    .section.bg-light {
+        background: #F3FFE6 !important;
+    }
+    
+    .navbar-nav {
+        text-align: center;
+    }
+    
+    .navbar-nav .nav-link {
+        color: #4caf50 !important;
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid rgba(76, 175, 80, 0.1);
+    }
+    
+    .navbar-nav .nav-link:hover {
+        color: #2c5530 !important;
+        background: rgba(76, 175, 80, 0.1);
+    }
+    
+    .login-btn {
+        margin-top: 0.5rem;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .btn-primary-custom,
+    .btn-secondary-custom {
+        width: 100%;
+        max-width: 300px;
+        text-align: center;
+        display: inline-block;
+    }
+    
+    .registration-form {
+        padding: 2.5rem;
+    }
+    
+    .procedure-card {
+        padding: 1.75rem;
+    }
+    
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+    
+    .contact-info {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+}
+
+/* ===== MOBILE SMALL (up to 575px) ===== */
+@media (max-width: 575px) {
+    .hero-title {
+        font-size: 2rem;
+        line-height: 1.1;
+        margin-bottom: 0.75rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .hero-description {
+        font-size: 0.95rem;
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
+    }
+    
+    .section {
+        padding: 3rem 0;
+    }
+    
+    .section.bg-light {
+        background: #F3FFE6 !important;
+    }
+    
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    .navbar {
+        padding: 0.75rem 0;
+    }
+    
+    .navbar-brand .logo-img {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .navbar-brand .logo-text {
+        font-size: 1rem;
+    }
+    
+    .navbar-nav .nav-link {
+        color: #4caf50 !important;
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+        border-bottom: 1px solid rgba(76, 175, 80, 0.1);
+    }
+    
+    .navbar-nav .nav-link:hover {
+        color: #2c5530 !important;
+        background: rgba(76, 175, 80, 0.1);
+    }
+    
+    .login-btn {
+        margin-top: 0.5rem;
+        width: 100%;
+        text-align: center;
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .btn-primary-custom,
+    .btn-secondary-custom {
+        width: 100%;
+        max-width: 280px;
+        padding: 0.875rem 1.5rem;
+        font-size: 1rem;
+        text-align: center;
+        display: inline-block;
+    }
+    
+    .registration-form {
+        padding: 1.5rem;
+        margin: 0 0.5rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+    
+    .form-label {
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .form-control {
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+    }
+    
+    .btn-submit {
+        padding: 0.875rem 1.5rem;
+        font-size: 1rem;
+    }
+    
+    .procedure-card {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .procedure-card h3 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .procedure-card p {
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+    
+    .procedure-icon {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 1rem;
+    }
+    
+    .procedure-icon i {
+        font-size: 1.25rem;
+    }
+    
+    .gallery-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .gallery-item {
+        margin-bottom: 1rem;
+    }
+    
+    .gallery-item img {
+        height: 200px;
+    }
+    
+    .gallery-overlay {
+        padding: 1rem;
+    }
+    
+    .gallery-overlay h5 {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .gallery-overlay p {
+        font-size: 0.9rem;
+    }
+    
+    .contact-info {
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .contact-info h5 {
+        font-size: 1.1rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .contact-info p {
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+    
+    .contact-info i {
+        font-size: 1.5rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .contact-form {
+        padding: 1.5rem;
+    }
+    
+    .contact-form h4 {
+        font-size: 1.3rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .back-to-top {
+        width: 45px;
+        height: 45px;
+        font-size: 1rem;
+        bottom: 20px;
+        right: 20px;
+    }
+    
+    .footer {
+        padding: 2rem 0;
+    }
+    
+    .footer h5 {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .footer p {
+        font-size: 0.9rem;
+    }
+    
+    .social-links a {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+        margin-right: 0.5rem;
+    }
+}
+
+/* ===== LANDSCAPE MOBILE ===== */
+@media (max-width: 767px) and (orientation: landscape) {
+    .hero-section {
+        min-height: 80vh;
+    }
+    
+    .hero-title {
+        font-size: 2.2rem;
+    }
+    
+    .section {
+        padding: 2rem 0;
+    }
+    
+    .registration-form {
+        padding: 1.5rem;
+    }
+}
+
+/* ===== HIGH DPI DISPLAYS ===== */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .logo-img {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+    .navbar,
+    .hero-buttons,
+    .back-to-top,
+    .footer {
+        display: none !important;
+    }
+    
+    .hero-section {
+        min-height: auto;
+        padding: 2rem 0;
+    }
+    
+    .section {
+        padding: 1rem 0;
+        page-break-inside: avoid;
+    }
+    
+    .registration-form {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+    
+    .procedure-card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        page-break-inside: avoid;
+    }
+    
+    .gallery-item {
+        page-break-inside: avoid;
+    }
+    
+    body {
+        font-size: 12pt;
+        line-height: 1.4;
+        color: #000;
+        background: #fff;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        color: #000;
+        page-break-after: avoid;
+    }
+    
+    a {
+        color: #000;
+        text-decoration: underline;
+    }
+}
+
+/* ===== ACCESSIBILITY IMPROVEMENTS ===== */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    /* Dark mode styles can be added here */
+    .hero-section {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    }
+    
+    .navbar {
+        background: rgba(26, 26, 26, 0.95);
+    }
+}
+
+/* ===== FOCUS VISIBILITY ===== */
+@media (any-hover: none) {
+    .btn-primary-custom:hover,
+    .btn-secondary-custom:hover,
+    .procedure-card:hover,
+    .gallery-item:hover {
+        transform: none;
+    }
+}
+
+/* ===== TOUCH DEVICE OPTIMIZATIONS ===== */
+@media (pointer: coarse) {
+    .btn-primary-custom,
+    .btn-secondary-custom,
+    .btn-submit {
+        min-height: 44px;
+        padding: 0.875rem 1.5rem;
+    }
+    
+    .form-control {
+        min-height: 44px;
+    }
+    
+    .navbar-nav .nav-link {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+    }
+}
+
+/* ===== END OF RESPONSIVE CSS ===== */ 
