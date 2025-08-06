@@ -385,8 +385,7 @@ include '../includes/header.php';
                 </div>
             </div>
 
-            <!-- Payment Verification -->
-             <?php if ($student['payment_status'] === 'pending'): ?>
+           <?php if ($student['payment_status'] === 'pending'): ?>
 <div class="student-card">
     <h3><i class="fas fa-money-check-alt"></i> Verifikasi Pembayaran</h3>
     
@@ -398,11 +397,18 @@ include '../includes/header.php';
         <div class="info-value" style="margin-top: 10px;">Diupload pada: <?php echo date('d M Y H:i', strtotime($student['payment_date'])); ?></div>
     </div>
     
+    <?php if (!empty($student['notes'])): ?>
+    <div class="info-item" style="margin-top: 1rem; border-color: #dc3545;">
+        <div class="info-label">Catatan / Alasan Penolakan Sebelumnya:</div>
+        <div class="info-value" style="color: #721c24;"><?php echo htmlspecialchars($student['notes']); ?></div>
+    </div>
+    <?php endif; ?>
+
     <form id="verificationForm" action="verify_payment.php" method="POST" style="margin-top: 20px;">
         <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($student['id']); ?>">
         
         <div class="form-group" style="margin-top: 1.5rem;">
-            <label for="rejection_reason" class="info-label">Alasan Penolakan (Opsional, isi jika menolak)</label>
+            <label for="rejection_reason" class="info-label">Alasan Penolakan Baru (Wajib diisi jika menolak)</label>
             <textarea name="rejection_reason" id="rejection_reason" rows="3" class="form-control" placeholder="Contoh: Nominal transfer tidak sesuai, bukti pembayaran tidak jelas, dll."></textarea>
         </div>
 
@@ -416,6 +422,48 @@ include '../includes/header.php';
         </div>
     </form>
 </div>
+<script>
+document.getElementById('verificationForm').addEventListener('submit', function(event) {
+    // Mencegah form submit secara langsung
+    event.preventDefault(); 
+    
+    const form = event.target;
+    // Mendeteksi tombol mana yang diklik untuk mendapatkan valuenya ('confirm' atau 'reject')
+    const action = document.activeElement.value; 
+    const reasonTextarea = document.getElementById('rejection_reason');
+    let confirmationMessage = '';
+
+    if (action === 'confirm') {
+        confirmationMessage = 'Apakah Anda yakin ingin MENGONFIRMASI pembayaran ini?';
+    } else if (action === 'reject') {
+        if (reasonTextarea.value.trim() === '') {
+            alert('Harap isi alasan penolakan sebelum melanjutkan.');
+            reasonTextarea.focus();
+            return; // Hentikan proses jika alasan kosong
+        }
+        confirmationMessage = `Apakah Anda yakin ingin MENOLAK pembayaran ini dengan alasan:\n"${reasonTextarea.value}"`;
+    }
+
+    // Tampilkan dialog konfirmasi
+    if (confirmationMessage && confirm(confirmationMessage)) {
+        // Jika admin setuju, tambahkan action ke form dan submit
+        const hiddenActionInput = document.createElement('input');
+        hiddenActionInput.type = 'hidden';
+        hiddenActionInput.name = 'action';
+        hiddenActionInput.value = action;
+        form.appendChild(hiddenActionInput);
+        
+        // Nonaktifkan tombol dan tampilkan status proses untuk mencegah submit ganda
+        form.querySelectorAll('button').forEach(button => {
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+        });
+        
+        form.submit();
+    }
+});
+</script>
+
 <?php endif; ?>
 
             <!-- Parent Information -->
@@ -494,42 +542,6 @@ function verifyStudent(studentId, status) {
         });
     }
 }
-
-document.getElementById('verificationForm').addEventListener('submit', function(event) {
-    // Mencegah form submit secara langsung
-    event.preventDefault(); 
-    
-    const form = event.target;
-    const action = document.activeElement.value; // Mendeteksi tombol mana yang diklik
-    const reasonTextarea = document.getElementById('rejection_reason');
-    let confirmationMessage = '';
-
-    if (action === 'confirm') {
-        confirmationMessage = 'Apakah Anda yakin ingin MENGONFIRMASI pembayaran ini?';
-    } else if (action === 'reject') {
-        if (reasonTextarea.value.trim() === '') {
-            alert('Harap isi alasan penolakan sebelum melanjutkan.');
-            reasonTextarea.focus();
-            return; // Hentikan proses jika alasan kosong
-        }
-        confirmationMessage = `Apakah Anda yakin ingin MENOLAK pembayaran ini dengan alasan:\n"${reasonTextarea.value}"`;
-    }
-
-    // Tampilkan dialog konfirmasi
-    if (confirmationMessage && confirm(confirmationMessage)) {
-        // Jika admin setuju, tambahkan action ke form dan submit
-        const hiddenActionInput = document.createElement('input');
-        hiddenActionInput.type = 'hidden';
-        hiddenActionInput.name = 'action';
-        hiddenActionInput.value = action;
-        form.appendChild(hiddenActionInput);
-        
-        // Nonaktifkan tombol untuk mencegah submit ganda
-        form.querySelectorAll('button').forEach(button => button.disabled = true);
-        
-        form.submit();
-    }
-});
 </script>
 
 <?php include '../includes/footer.php'; ?>
