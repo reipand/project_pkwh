@@ -13,10 +13,15 @@ $base_path = $is_admin ? '../' : './';
                     <h5 class="mb-3">SMP Bina Informatika</h5>
                     <p class="mb-3">Sekolah humanis yang mengedepankan kompetensi anak untuk berkembang sesuai dengan bakat dan minat masing-masing individu.</p>
                     <div class="social-links">
-                        <a href="#" class="me-3"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="me-3"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="me-3"><i class="fab fa-youtube"></i></a>
-                        <a href="#" class="me-3"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#" class="me-3">
+                            <img src="<?php echo $base_path; ?>assets/image/facebook.png" alt="Facebook" style="width: 24px; height: 24px;">
+                        </a>
+                        <a href="#" class="me-3">
+                            <img src="<?php echo $base_path; ?>assets/image/logoIG.png" alt="Instagram" style="width: 24px; height: 24px;">
+                        </a>
+                        <a href="#" class="me-3">
+                            <img src="<?php echo $base_path; ?>assets/image/logoWa.png" alt="WhatsApp" style="width: 24px; height: 24px;">
+                        </a>
                     </div>
                 </div>
                 
@@ -24,15 +29,15 @@ $base_path = $is_admin ? '../' : './';
                     <h5 class="mb-3">Informasi Kontak</h5>
                     <div class="contact-info">
                         <div class="d-flex mb-2">
-                            <i class="fas fa-map-marker-alt me-3 mt-1"></i>
+                            <img src="<?php echo $base_path; ?>assets/image/logoLocation.png" alt="Lokasi" style="width: 20px; height: 20px; margin-right: 12px; margin-top: 4px;">
                             <p class="mb-0">Jl. Tegal Rotan Raya No.8 A, Sawah Baru, Kec. Ciputat, Kota Tangerang Selatan, Banten 15412</p>
                         </div>
                         <div class="d-flex mb-2">
-                            <i class="fas fa-phone me-3 mt-1"></i>
+                            <img src="<?php echo $base_path; ?>assets/image/phone.png" alt="Telepon" style="width: 20px; height: 20px; margin-right: 12px; margin-top: 4px;">
                             <p class="mb-0">083896226790 (Rizam Nuruzaman)</p>
                         </div>
                         <div class="d-flex mb-2">
-                            <i class="fas fa-envelope me-3 mt-1"></i>
+                            <img src="<?php echo $base_path; ?>assets/image/email.png" alt="Email" style="width: 20px; height: 20px; margin-right: 12px; margin-top: 4px;">
                             <p class="mb-0">info@smpbinainformatika.sch.id</p>
                         </div>
                     </div>
@@ -65,7 +70,7 @@ $base_path = $is_admin ? '../' : './';
 
     <!-- Back to Top Button -->
     <button id="backToTop" class="btn btn-primary back-to-top" title="Kembali ke atas">
-        <i class="fas fa-arrow-up"></i>
+        <img src="<?php echo $base_path; ?>assets/image/logoPanah.png" alt="Scroll to top" style="width: 20px; height: 20px;">
     </button>
 
     <!-- Loading Spinner -->

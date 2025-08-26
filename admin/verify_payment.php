@@ -6,8 +6,12 @@
 
 session_start();
 
+// Debug: Log all POST data
+error_log("Payment verification - POST data: " . print_r($_POST, true));
+
 // 1. Keamanan: Pastikan hanya admin yang login yang bisa mengakses
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
+    error_log("Payment verification - Unauthorized access attempt");
     header('Location: ../login.php?error=unauthorized');
     exit();
 }
@@ -22,8 +26,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['student_id'], $_POST[
     $rejection_reason = $_POST['rejection_reason'] ?? ''; // Ambil alasan penolakan
     $admin_id = $_SESSION['user_id'];
     
+    error_log("Payment verification - Processing: student_id=$student_id, action=$action, admin_id=$admin_id");
+    
     // Validasi dasar
     if (!$student_id || !in_array($action, ['confirm', 'reject'])) {
+        error_log("Payment verification - Invalid input: student_id=$student_id, action=$action");
         $_SESSION['error_message'] = 'Aksi tidak valid atau ID siswa tidak ditemukan.';
         header('Location: dashboard.php');
         exit();
@@ -35,13 +42,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['student_id'], $_POST[
         $db = $database->getConnection();
         $db->beginTransaction();
 
-        $checkStmt = $db->prepare("SELECT payment_status, name FROM students WHERE id = ?");
+        $checkStmt = $db->prepare("SELECT payment_status, payment_proof, name FROM students WHERE id = ?");
         $checkStmt->bindParam(1, $student_id);
         $checkStmt->execute();
         $student = $checkStmt->fetch(PDO::FETCH_ASSOC);
 
-        if (!$student || $student['payment_status'] !== 'pending') {
-            throw new Exception('Status pembayaran sudah diubah sebelumnya atau siswa tidak ditemukan.');
+        if (!$student) {
+            error_log("Payment verification - Student not found: student_id=$student_id");
+            throw new Exception('Siswa tidak ditemukan.');
+        }
+
+        error_log("Payment verification - Student found: " . print_r($student, true));
+
+        // Check if student has payment proof and status allows verification
+        if (!$student['payment_proof'] || !in_array($student['payment_status'], ['pending', 'unpaid'])) {
+            error_log("Payment verification - Cannot verify: payment_proof=" . ($student['payment_proof'] ? 'yes' : 'no') . ", payment_status=" . $student['payment_status']);
+            throw new Exception('Status pembayaran sudah diubah sebelumnya atau tidak ada bukti pembayaran.');
         }
 
         // --- FIX: Logika query diperbaiki ---
@@ -67,6 +83,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['student_id'], $_POST[
 
         $stmt->execute();
         
+        error_log("Payment verification - Database update successful for student_id=$student_id, action=$action");
+        
         // Pencatatan Log Aktivitas
         $logQuery = "INSERT INTO activity_logs (user_id, action, description, ip_address, user_agent) VALUES (?, ?, ?, ?, ?)";
         $logStmt = $db->prepare($logQuery);
@@ -75,11 +93,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['student_id'], $_POST[
         $logStmt->execute([$admin_id, $log_action, $log_description, $ip_address, $user_agent]);
         
         $db->commit();
+        error_log("Payment verification - Transaction committed successfully");
         $_SESSION['success_message'] = 'Status pembayaran berhasil diperbarui.';
 
     } catch (Exception $e) {
         if ($db) $db->rollBack();
         error_log("Payment verification error: " . $e->getMessage());
+        error_log("Payment verification - Stack trace: " . $e->getTraceAsString());
         $_SESSION['error_message'] = 'Terjadi kesalahan: ' . $e->getMessage();
     }
     

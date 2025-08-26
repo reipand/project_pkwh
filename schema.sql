@@ -1,3 +1,4 @@
+-- Active: 1755703083531@@127.0.0.1@3306@smp_bina_informatika
 -- =====================================================
 -- Database Schema untuk SMP Bina Informatika
 -- Penerimaan Siswa Baru System
@@ -27,7 +28,7 @@ CREATE TABLE students (
     username VARCHAR(50) UNIQUE NOT NULL,
     registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status ENUM('pending', 'accepted', 'rejected', 'completed') DEFAULT 'pending',
-    payment_status ENUM('unpaid', 'paid', 'verified') DEFAULT 'unpaid',
+    payment_status ENUM('unpaid', 'pending', 'paid', 'verified', 'confirmed', 'rejected') DEFAULT 'unpaid',
     payment_proof VARCHAR(255) NULL,
     payment_date TIMESTAMP NULL,
     test_score DECIMAL(5,2) NULL,
@@ -59,7 +60,8 @@ CREATE TABLE contact_messages (
     INDEX idx_status (status),
     INDEX idx_created_at (created_at)
 );
-
+ALTER TABLE students ADD score INT DEFAULT 0;
+ALTER TABLE students ADD date_of_birth DATE;
 -- Tabel untuk admin/users
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,

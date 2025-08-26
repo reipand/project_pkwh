@@ -412,8 +412,11 @@ include '../includes/header.php';
                                         <?php 
                                         switch($student['payment_status']) {
                                             case 'unpaid': echo 'Belum Bayar'; break;
+                                            case 'pending': echo 'Menunggu Konfirmasi'; break;
                                             case 'paid': echo 'Sudah Bayar'; break;
                                             case 'verified': echo 'Terverifikasi'; break;
+                                            case 'confirmed': echo 'Dikonfirmasi'; break;
+                                            case 'rejected': echo 'Ditolak'; break;
                                             default: echo $student['payment_status'];
                                         }
                                         ?>

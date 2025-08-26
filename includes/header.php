@@ -59,6 +59,7 @@ $base_path = $is_admin ? '../' : './';
             to { opacity: 1; transform: translateX(0); }
         }
     </style>
+    <link rel="icon" type="image/png" href="<?php echo $base_path; ?>assets/image/LogoBI.png">
 </head>
 <body>
     <!-- Header Navigation -->
@@ -67,7 +68,7 @@ $base_path = $is_admin ? '../' : './';
             <div class="navbar-brand">
                 <div class="logo-container">
                     <div class="logo-img" style="width: 40px; height: 40px; background: #4caf50; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; margin-right: 10px;">
-                        <i class="fas fa-graduation-cap"></i>
+                        <img src="<?php echo $base_path; ?>assets/image/LogoBI.png" alt="Logo" style="width: 32px; height: 32px; object-fit: contain; background: none; border-radius: 50%;">
                     </div>
                     <span class="logo-text">SMP Bina Informatika</span>
                 </div>
@@ -86,7 +87,10 @@ $base_path = $is_admin ? '../' : './';
                             <a class="nav-link" href="<?php echo $base_path; ?>index.php">Beranda</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo $base_path; ?>dashboard.php">Dashboard</a>
+                            <a class="nav-link" href="<?php echo $base_path; ?>student_dashboard.php">Dashboard</a>
+                        </li>
+                            <li class="nav-item">
+                            <a class="nav-link" href="<?php echo $base_path; ?>../payment.php">Pembayaran</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link btn btn-danger login-btn" href="<?php echo $base_path; ?>logout.php">Logout</a>
@@ -106,6 +110,9 @@ $base_path = $is_admin ? '../' : './';
                             <a class="nav-link" href="<?php echo $base_path; ?>index.php#pendaftaran">Pendaftaran</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="<?php echo $base_path; ?>../payment.php">Pembayaran</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="<?php echo $base_path; ?>index.php#gallery">Galeri</a>
                         </li>
                         <li class="nav-item">
@@ -121,10 +128,13 @@ $base_path = $is_admin ? '../' : './';
                         <a class="nav-link" href="<?php echo $base_path; ?>index.php">Beranda</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="dashboard.php">Dashboard</a>
+                        <a class="nav-link" href="student_dashboard.php">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link btn btn-danger login-btn" href="logout.php">Logout</a>
+                    <a class="nav-link" href="<?php echo $base_path; ?>payment.php">Pembayaran</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-danger login-btn" href="<?php echo $base_path; ?>logout.php">Logout</a>
                     </li>
                     <?php endif; ?>
                 </ul>

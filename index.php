@@ -22,7 +22,7 @@ include 'includes/header.php';
             </p>
             <div class="hero-buttons">
                 <?php if (isset($_SESSION['user_id']) && $_SESSION['user_type'] === 'student'): ?>
-                    <a href="dashboard.php" class="btn btn-primary-custom">Dashboard Saya</a>
+                    <a href="student_dashboard.php" class="btn btn-primary-custom">Dashboard Saya</a>
                     <a href="#informasi" class="btn btn-secondary-custom">Pelajari Lebih Lanjut</a>
                 <?php else: ?>
                     <a href="#pendaftaran" class="btn btn-primary-custom">Daftar Sekarang</a>
@@ -55,8 +55,8 @@ include 'includes/header.php';
                 <div class="gallery-item animate-fade-in-up">
                     <img src="assets/image/ldkpd.png" alt="ProgsiT 2024" class="img-fluid">
                     <div class="gallery-overlay">
-                        <h5>ProgsiT 2024</h5>
-                        <p>Program studi teknologi informasi</p>
+                        <h5>Progsil 2024</h5>
+                        <p>Program Silang</p>
                     </div>
                 </div>
             </div>
@@ -81,7 +81,7 @@ include 'includes/header.php';
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="procedure-card animate-slide-in-left">
                     <div class="procedure-icon">
-                        <i class="fas fa-user-plus"></i>
+                        <img src="assets/image/langkah1.png" alt="Langkah 1" style="width: 60px; height: 60px;">
                     </div>
                     <h3>Langkah 1</h3>
                     <p>Calon Siswa mendaftar dengan cara klik tombol 'Daftar Sekarang' kemudian mengisi data diri pada Form Registrasi untuk mendapatkan akun (Username dan Password)</p>
@@ -90,7 +90,7 @@ include 'includes/header.php';
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="procedure-card animate-slide-in-left">
                     <div class="procedure-icon">
-                        <i class="fas fa-file-invoice"></i>
+                        <img src="assets/image/langkah2.png" alt="Langkah 2" style="width: 60px; height: 60px;">
                     </div>
                     <h3>Langkah 2</h3>
                     <p>Jika selesai pendaftaran silakan login dengan username dan password. Kemudian lakukan pembayaran pendaftaran melalui bank BRI no rekening: 70148022526</p>
@@ -99,7 +99,7 @@ include 'includes/header.php';
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="procedure-card animate-slide-in-left">
                     <div class="procedure-icon">
-                        <i class="fas fa-upload"></i>
+                        <img src="assets/image/langkah3.png" alt="Langkah 3" style="width: 60px; height: 60px;">
                     </div>
                     <h3>Langkah 3</h3>
                     <p>Upload bukti transfer di menu Keuangan (Pembayaran Pendaftaran). Lengkapi Formulir pendaftaran secara lengkap</p>
@@ -108,7 +108,7 @@ include 'includes/header.php';
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="procedure-card animate-slide-in-right">
                     <div class="procedure-icon">
-                        <i class="fas fa-clipboard-check"></i>
+                        <img src="assets/image/langkah4.png" alt="Langkah 4" style="width: 60px; height: 60px;">
                     </div>
                     <h3>Langkah 4</h3>
                     <p>Mengikuti Tes Seleksi atau Observasi sesuai dengan jadwal yang telah ditentukan. Melakukan daftar ulang jika dinyatakan 'Diterima' dengan melakukan pembayaran SP melalui Virtual Account</p>
@@ -137,7 +137,7 @@ include 'includes/header.php';
                         <h2 class="section-title">Selamat Datang!</h2>
                         <p class="lead">Anda sudah terdaftar sebagai siswa SMP Bina Informatika</p>
                         <div class="mt-4">
-                            <a href="dashboard.php" class="btn btn-primary-custom btn-lg">
+                            <a href="student_dashboard.php" class="btn btn-primary-custom btn-lg">
                                 <i class="fas fa-tachometer-alt me-2"></i>
                                 Lihat Dashboard Saya
                             </a>
@@ -278,7 +278,7 @@ include 'includes/header.php';
                             </div>
                             <div class="col-md-4 text-center">
                                 <div class="info-icon mb-3">
-                                    <i class="fas fa-lightbulb fa-3x text-primary-custom"></i>
+                                    <img src="assets/image/LogoBI.png" alt="SMP Bina Informatika" style="width: 80px; height: 80px;">
                                 </div>
                                 <p class="text-muted">Tanggal: 2025-06-17 00:00:00</p>
                             </div>
@@ -327,21 +327,21 @@ include 'includes/header.php';
         <div class="row">
             <div class="col-lg-4 mb-4">
                 <div class="contact-info text-center">
-                    <i class="fas fa-map-marker-alt"></i>
+                    <img src="assets/image/logoLocation.png" alt="Lokasi" style="width: 40px; height: 40px; margin-bottom: 15px;">
                     <h5>Lokasi</h5>
                     <p>Jl. Tegal Rotan Raya No.8 A, Sawah Baru, Kec. Ciputat, Kota Tangerang Selatan, Banten 15412</p>
                 </div>
             </div>
             <div class="col-lg-4 mb-4">
                 <div class="contact-info text-center">
-                    <i class="fas fa-envelope"></i>
+                    <img src="assets/image/email.png" alt="Email" style="width: 40px; height: 40px; margin-bottom: 15px;">
                     <h5>Email</h5>
                     <p>info@smpbinainformatika.sch.id</p>
                 </div>
             </div>
             <div class="col-lg-4 mb-4">
                 <div class="contact-info text-center">
-                    <i class="fas fa-phone"></i>
+                    <img src="assets/image/phone.png" alt="Telepon" style="width: 40px; height: 40px; margin-bottom: 15px;">
                     <h5>Telepon</h5>
                     <p>083896226790<br>(Rizam Nuruzaman)</p>
                 </div>

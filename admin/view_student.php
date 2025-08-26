@@ -376,6 +376,8 @@ include '../includes/header.php';
                                     case 'pending': echo 'Menunggu Konfirmasi'; break;
                                     case 'paid': echo 'Sudah Bayar'; break;
                                     case 'verified': echo 'Terverifikasi'; break;
+                                    case 'confirmed': echo 'Dikonfirmasi'; break;
+                                    case 'rejected': echo 'Ditolak'; break;
                                     default: echo $student['payment_status'];
                                 }
                                 ?>
@@ -385,86 +387,102 @@ include '../includes/header.php';
                 </div>
             </div>
 
-           <?php if ($student['payment_status'] === 'pending'): ?>
-<div class="student-card">
-    <h3><i class="fas fa-money-check-alt"></i> Verifikasi Pembayaran</h3>
-    
-    <div class="info-item" style="text-align: center; padding: 20px;">
-        <div class="info-label">Bukti Pembayaran yang Diupload</div>
-        <a href="../uploads/payments/<?php echo htmlspecialchars($student['payment_proof']); ?>" target="_blank" title="Klik untuk melihat ukuran penuh">
-            <img src="../uploads/payments/<?php echo htmlspecialchars($student['payment_proof']); ?>" alt="Bukti Pembayaran" style="max-width: 100%; max-height: 400px; border-radius: 8px; margin-top: 10px; border: 1px solid #ddd;">
-        </a>
-        <div class="info-value" style="margin-top: 10px;">Diupload pada: <?php echo date('d M Y H:i', strtotime($student['payment_date'])); ?></div>
-    </div>
-    
-    <?php if (!empty($student['notes'])): ?>
-    <div class="info-item" style="margin-top: 1rem; border-color: #dc3545;">
-        <div class="info-label">Catatan / Alasan Penolakan Sebelumnya:</div>
-        <div class="info-value" style="color: #721c24;"><?php echo htmlspecialchars($student['notes']); ?></div>
-    </div>
-    <?php endif; ?>
+            <!-- Payment Verification -->
+            <?php if ($student['payment_proof'] && in_array($student['payment_status'], ['pending', 'unpaid'])): ?>
+            <div class="student-card">
+                <h3><i class="fas fa-money-check-alt"></i> Verifikasi Pembayaran</h3>
+                
+                <!-- Debug info (remove in production) -->
+                <?php if (isset($_GET['debug'])): ?>
+                <div class="alert alert-info">
+                    <strong>Debug Info:</strong><br>
+                    Payment Proof: <?php echo $student['payment_proof'] ? 'Yes' : 'No'; ?><br>
+                    Payment Status: <?php echo $student['payment_status']; ?><br>
+                    Student ID: <?php echo $student['id']; ?>
+                </div>
+                <?php endif; ?>
+                
+                <div class="info-item" style="text-align: center; padding: 20px;">
+                    <div class="info-label">Bukti Pembayaran yang Diupload</div>
+                    <a href="../uploads/payments/<?php echo htmlspecialchars($student['payment_proof']); ?>" target="_blank" title="Klik untuk melihat ukuran penuh">
+                        <img src="../uploads/payments/<?php echo htmlspecialchars($student['payment_proof']); ?>" alt="Bukti Pembayaran" style="max-width: 100%; max-height: 400px; border-radius: 8px; margin-top: 10px; border: 1px solid #ddd;">
+                    </a>
+                    <div class="info-value" style="margin-top: 10px;">Diupload pada: <?php echo date('d M Y H:i', strtotime($student['payment_date'])); ?></div>
+                </div>
+                
+                <form id="verificationForm" action="verify_payment.php" method="POST" style="margin-top: 20px;">
+                    <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($student['id']); ?>">
+                    
+                    <div class="form-group" style="margin-top: 1.5rem;">
+                        <label for="rejection_reason" class="info-label">Alasan Penolakan (Opsional, isi jika menolak)</label>
+                        <textarea name="rejection_reason" id="rejection_reason" rows="3" class="form-control" placeholder="Contoh: Nominal transfer tidak sesuai, bukti pembayaran tidak jelas, dll."></textarea>
+                    </div>
 
-    <form id="verificationForm" action="verify_payment.php" method="POST" style="margin-top: 20px;">
-        <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($student['id']); ?>">
-        
-        <div class="form-group" style="margin-top: 1.5rem;">
-            <label for="rejection_reason" class="info-label">Alasan Penolakan Baru (Wajib diisi jika menolak)</label>
-            <textarea name="rejection_reason" id="rejection_reason" rows="3" class="form-control" placeholder="Contoh: Nominal transfer tidak sesuai, bukti pembayaran tidak jelas, dll."></textarea>
-        </div>
-
-        <div class="action-buttons">
-            <button type="submit" name="action" value="confirm" class="btn-verify">
-                <i class="fas fa-check-circle"></i> Konfirmasi Pembayaran
-            </button>
-            <button type="submit" name="action" value="reject" class="btn-reject">
-                <i class="fas fa-times-circle"></i> Tolak Pembayaran
-            </button>
-        </div>
-    </form>
-</div>
-<script>
-document.getElementById('verificationForm').addEventListener('submit', function(event) {
-    // Mencegah form submit secara langsung
-    event.preventDefault(); 
-    
-    const form = event.target;
-    // Mendeteksi tombol mana yang diklik untuk mendapatkan valuenya ('confirm' atau 'reject')
-    const action = document.activeElement.value; 
-    const reasonTextarea = document.getElementById('rejection_reason');
-    let confirmationMessage = '';
-
-    if (action === 'confirm') {
-        confirmationMessage = 'Apakah Anda yakin ingin MENGONFIRMASI pembayaran ini?';
-    } else if (action === 'reject') {
-        if (reasonTextarea.value.trim() === '') {
-            alert('Harap isi alasan penolakan sebelum melanjutkan.');
-            reasonTextarea.focus();
-            return; // Hentikan proses jika alasan kosong
-        }
-        confirmationMessage = `Apakah Anda yakin ingin MENOLAK pembayaran ini dengan alasan:\n"${reasonTextarea.value}"`;
-    }
-
-    // Tampilkan dialog konfirmasi
-    if (confirmationMessage && confirm(confirmationMessage)) {
-        // Jika admin setuju, tambahkan action ke form dan submit
-        const hiddenActionInput = document.createElement('input');
-        hiddenActionInput.type = 'hidden';
-        hiddenActionInput.name = 'action';
-        hiddenActionInput.value = action;
-        form.appendChild(hiddenActionInput);
-        
-        // Nonaktifkan tombol dan tampilkan status proses untuk mencegah submit ganda
-        form.querySelectorAll('button').forEach(button => {
-            button.disabled = true;
-            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
-        });
-        
-        form.submit();
-    }
-});
-</script>
-
-<?php endif; ?>
+                    <div class="action-buttons">
+                        <button type="button" onclick="confirmPayment()" class="btn-verify">
+                            <i class="fas fa-check-circle"></i> Konfirmasi Pembayaran
+                        </button>
+                        <button type="button" onclick="rejectPayment()" class="btn-reject">
+                            <i class="fas fa-times-circle"></i> Tolak Pembayaran
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <?php elseif ($student['payment_proof']): ?>
+            <!-- Payment already verified -->
+            <div class="student-card">
+                <h3><i class="fas fa-money-check-alt"></i> Status Pembayaran</h3>
+                
+                <div class="info-item" style="text-align: center; padding: 20px;">
+                    <div class="info-label">Bukti Pembayaran</div>
+                    <a href="../uploads/payments/<?php echo htmlspecialchars($student['payment_proof']); ?>" target="_blank" title="Klik untuk melihat ukuran penuh">
+                        <img src="../uploads/payments/<?php echo htmlspecialchars($student['payment_proof']); ?>" alt="Bukti Pembayaran" style="max-width: 100%; max-height: 400px; border-radius: 8px; margin-top: 10px; border: 1px solid #ddd;">
+                    </a>
+                    <div class="info-value" style="margin-top: 10px;">
+                        Diupload pada: <?php echo date('d M Y H:i', strtotime($student['payment_date'])); ?><br>
+                        Status: 
+                        <span class="status-badge status-<?php echo $student['payment_status']; ?>">
+                            <?php 
+                            switch($student['payment_status']) {
+                                case 'confirmed': echo 'Dikonfirmasi'; break;
+                                case 'rejected': echo 'Ditolak'; break;
+                                case 'verified': echo 'Terverifikasi'; break;
+                                case 'paid': echo 'Sudah Bayar'; break;
+                                default: echo ucfirst($student['payment_status']);
+                            }
+                            ?>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <?php else: ?>
+            <!-- No payment proof uploaded -->
+            <div class="student-card">
+                <h3><i class="fas fa-money-check-alt"></i> Status Pembayaran</h3>
+                
+                <div class="info-item" style="text-align: center; padding: 20px;">
+                    <div class="info-label">Bukti Pembayaran</div>
+                    <div class="info-value">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #ffc107; margin-bottom: 1rem;"></i><br>
+                        Belum ada bukti pembayaran yang diupload.<br>
+                        Status: 
+                        <span class="status-badge status-<?php echo $student['payment_status']; ?>">
+                            <?php 
+                            switch($student['payment_status']) {
+                                case 'unpaid': echo 'Belum Bayar'; break;
+                                case 'pending': echo 'Menunggu Konfirmasi'; break;
+                                case 'paid': echo 'Sudah Bayar'; break;
+                                case 'verified': echo 'Terverifikasi'; break;
+                                case 'confirmed': echo 'Dikonfirmasi'; break;
+                                case 'rejected': echo 'Ditolak'; break;
+                                default: echo ucfirst($student['payment_status']);
+                            }
+                            ?>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
 
             <!-- Parent Information -->
             <div class="student-card">
@@ -539,6 +557,117 @@ function verifyStudent(studentId, status) {
         .catch(error => {
             console.error('Error:', error);
             alert('Terjadi kesalahan sistem');
+        });
+    }
+}
+
+function confirmPayment() {
+    console.log('confirmPayment function called');
+    const confirmationMessage = 'Apakah Anda yakin ingin MENGONFIRMASI pembayaran ini?';
+    if (confirm(confirmationMessage)) {
+        console.log('Confirmation accepted, submitting form...');
+        const form = document.getElementById('verificationForm');
+        if (!form) {
+            console.error('Form not found!');
+            alert('Error: Form tidak ditemukan');
+            return;
+        }
+        
+        // Create a new FormData object from the form
+        const formData = new FormData(form);
+        
+        // Add the action parameter
+        formData.append('action', 'confirm');
+        
+        console.log('Form data entries:');
+        for (let [key, value] of formData.entries()) {
+            console.log(key + ': ' + value);
+        }
+        
+        // Submit using fetch instead of form.submit()
+        fetch('verify_payment.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            console.log('Response status:', response.status);
+            if (response.redirected) {
+                console.log('Redirecting to:', response.url);
+                window.location.href = response.url;
+            } else {
+                return response.text();
+            }
+        })
+        .then(data => {
+            if (data) {
+                console.log('Response data:', data);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat mengirim data');
+        });
+    }
+}
+
+function rejectPayment() {
+    console.log('rejectPayment function called');
+    const reasonTextarea = document.getElementById('rejection_reason');
+    if (!reasonTextarea) {
+        console.error('Rejection reason textarea not found!');
+        alert('Error: Textarea alasan penolakan tidak ditemukan');
+        return;
+    }
+    
+    if (reasonTextarea.value.trim() === '') {
+        alert('Harap isi alasan penolakan sebelum melanjutkan.');
+        reasonTextarea.focus();
+        return;
+    }
+    
+    const confirmationMessage = `Apakah Anda yakin ingin MENOLAK pembayaran ini dengan alasan:\n"${reasonTextarea.value}"`;
+    if (confirm(confirmationMessage)) {
+        console.log('Rejection confirmed, submitting form...');
+        const form = document.getElementById('verificationForm');
+        if (!form) {
+            console.error('Form not found!');
+            alert('Error: Form tidak ditemukan');
+            return;
+        }
+        
+        // Create a new FormData object from the form
+        const formData = new FormData(form);
+        
+        // Add the action parameter
+        formData.append('action', 'reject');
+        
+        console.log('Form data entries:');
+        for (let [key, value] of formData.entries()) {
+            console.log(key + ': ' + value);
+        }
+        
+        // Submit using fetch instead of form.submit()
+        fetch('verify_payment.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            console.log('Response status:', response.status);
+            if (response.redirected) {
+                console.log('Redirecting to:', response.url);
+                window.location.href = response.url;
+            } else {
+                return response.text();
+            }
+        })
+        .then(data => {
+            if (data) {
+                console.log('Response data:', data);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat mengirim data');
         });
     }
 }

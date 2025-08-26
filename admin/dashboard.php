@@ -40,7 +40,11 @@ try {
         SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending_count,
         SUM(CASE WHEN status = 'accepted' THEN 1 ELSE 0 END) as accepted_count,
         SUM(CASE WHEN status = 'rejected' THEN 1 ELSE 0 END) as rejected_count,
-        SUM(CASE WHEN payment_status = 'paid' THEN 1 ELSE 0 END) as paid_count
+        SUM(CASE WHEN payment_status = 'unpaid' THEN 1 ELSE 0 END) as unpaid_count,
+        SUM(CASE WHEN payment_status = 'pending' THEN 1 ELSE 0 END) as payment_pending_count,
+        SUM(CASE WHEN payment_status = 'confirmed' THEN 1 ELSE 0 END) as payment_confirmed_count,
+        SUM(CASE WHEN payment_status = 'rejected' THEN 1 ELSE 0 END) as payment_rejected_count,
+        SUM(CASE WHEN payment_proof IS NOT NULL THEN 1 ELSE 0 END) as has_payment_proof_count
         FROM students";
     $statsStmt = $db->prepare($statsQuery);
     $statsStmt->execute();
@@ -284,6 +288,31 @@ include '../includes/header.php';
     background: #1976d2;
 }
 
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #2196f3, #1976d2);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #1976d2, #1565c0);
+    color: white;
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(33, 150, 243, 0.3);
+}
+
 @media (max-width: 768px) {
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -348,15 +377,74 @@ include '../includes/header.php';
                         <div class="stat-number"><?php echo $stats['rejected_count']; ?></div>
                         <div class="stat-label">Ditolak</div>
                     </div>
-                    <div class="stat-card info">
-                        <div class="stat-number"><?php echo $stats['paid_count']; ?></div>
-                        <div class="stat-label">Sudah Bayar</div>
+                </div>
+            </div>
+            
+            <!-- Payment Statistics -->
+            <div class="admin-card">
+                <h3>
+                    <i class="fas fa-money-check-alt"></i>
+                    Statistik Pembayaran
+                </h3>
+                
+                <div class="stats-grid">
+                    <div class="stat-card danger">
+                        <div class="stat-number"><?php echo $stats['unpaid_count']; ?></div>
+                        <div class="stat-label">Belum Bayar</div>
                     </div>
+                    <div class="stat-card warning">
+                        <div class="stat-number"><?php echo $stats['payment_pending_count']; ?></div>
+                        <div class="stat-label">Menunggu Konfirmasi</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number"><?php echo $stats['payment_confirmed_count']; ?></div>
+                        <div class="stat-label">Dikonfirmasi</div>
+                    </div>
+                    <div class="stat-card info">
+                        <div class="stat-number"><?php echo $stats['has_payment_proof_count']; ?></div>
+                        <div class="stat-label">Upload Bukti</div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 1rem;">
+                    <a href="test_payment.php" class="btn btn-primary">
+                        <i class="fas fa-cog"></i> Kelola Pembayaran
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="admin-card">
+                <h3>
+                    <i class="fas fa-bolt"></i>
+                    Aksi Cepat
+                </h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <a href="test_payment.php" class="btn btn-primary" style="text-align: center;">
+                        <i class="fas fa-money-check-alt"></i><br>
+                        Verifikasi Pembayaran
+                    </a>
+                    
+                    <a href="debug_payment.php" class="btn btn-primary" style="text-align: center; background: linear-gradient(135deg, #ff9800, #f57c00);">
+                        <i class="fas fa-bug"></i><br>
+                        Debug Pembayaran
+                    </a>
+                    
+                    <a href="#students-table" class="btn btn-primary" style="text-align: center; background: linear-gradient(135deg, #4caf50, #388e3c);">
+                        <i class="fas fa-users"></i><br>
+                        Lihat Semua Siswa
+                    </a>
+                    
+                    <a href="../logout.php" class="btn btn-primary" style="text-align: center; background: linear-gradient(135deg, #f44336, #d32f2f);">
+                        <i class="fas fa-sign-out-alt"></i><br>
+                        Logout
+                    </a>
                 </div>
             </div>
             
             <!-- Recent Registrations -->
-            <div class="admin-card">
+            <div class="admin-card" id="students-table">
                 <h3>
                     Pendaftaran Terbaru
                 </h3>
@@ -367,6 +455,13 @@ include '../includes/header.php';
                         <option value="">Semua Status</option>
                         <option value="pending">Menunggu Verifikasi</option>
                         <option value="accepted">Diterima</option>
+                        <option value="rejected">Ditolak</option>
+                    </select>
+                    <select id="filterPaymentStatus">
+                        <option value="">Semua Pembayaran</option>
+                        <option value="unpaid">Belum Bayar</option>
+                        <option value="pending">Menunggu Konfirmasi</option>
+                        <option value="confirmed">Dikonfirmasi</option>
                         <option value="rejected">Ditolak</option>
                     </select>
                     <button onclick="filterStudents()">
@@ -390,7 +485,7 @@ include '../includes/header.php';
                         </thead>
                         <tbody id="studentsTableBody">
                             <?php foreach ($recentStudents as $student): ?>
-                            <tr data-status="<?php echo $student['status']; ?>">
+                            <tr data-status="<?php echo $student['status']; ?>" data-payment-status="<?php echo $student['payment_status']; ?>">
                                 <td><?php echo htmlspecialchars($student['name']); ?></td>
                                 <td><?php echo htmlspecialchars($student['username']); ?></td>
                                 <td><?php echo htmlspecialchars($student['class']); ?></td>
@@ -415,6 +510,8 @@ include '../includes/header.php';
                                             case 'pending': echo 'Menunggu Konfirmasi'; break;
                                             case 'paid': echo 'Sudah Bayar'; break;
                                             case 'verified': echo 'Terverifikasi'; break;
+                                            case 'confirmed': echo 'Dikonfirmasi'; break;
+                                            case 'rejected': echo 'Ditolak'; break;
                                             default: echo $student['payment_status'];
                                         }
                                         ?>
@@ -450,17 +547,25 @@ include '../includes/header.php';
 function filterStudents() {
     const searchName = document.getElementById('searchName').value.toLowerCase();
     const filterStatus = document.getElementById('filterStatus').value;
+    const filterPaymentStatus = document.getElementById('filterPaymentStatus').value;
     const tableBody = document.getElementById('studentsTableBody');
     const rows = tableBody.getElementsByTagName('tr');
     
     for (let row of rows) {
         const name = row.cells[0].textContent.toLowerCase();
         const status = row.getAttribute('data-status');
+        const paymentStatusText = row.getAttribute('data-payment-status'); // Use data attribute
         
         const nameMatch = name.includes(searchName);
         const statusMatch = !filterStatus || status === filterStatus;
         
-        if (nameMatch && statusMatch) {
+        // Payment status filtering
+        let paymentStatusMatch = true;
+        if (filterPaymentStatus) {
+            paymentStatusMatch = paymentStatusText === filterPaymentStatus;
+        }
+        
+        if (nameMatch && statusMatch && paymentStatusMatch) {
             row.style.display = '';
         } else {
             row.style.display = 'none';

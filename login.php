@@ -11,7 +11,7 @@ if (isset($_SESSION['user_id'])) {
     if ($_SESSION['user_type'] === 'admin') {
         header('Location: admin/dashboard.php');
     } else {
-        header('Location: dashboard.php');
+        header('Location: student_dashboard.php');
     }
     exit();
 }
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $_SESSION['user_type'] = 'student';
                             $_SESSION['status'] = $student['status'];
 
-                            header('Location: dashboard.php');
+                            header('Location: student_dashboard.php');
                             exit();
                         }
                     } else {
