@@ -131,7 +131,8 @@ $koneksi->close();
             </ul>
         </div>
 
-        <div class="flex justify-center mb-8">
+        <div class="flex justify-center gap-4 mb-8">
+            <a href="dashboard.php" class="bg-gray-200 text-gray-800 font-semibold py-4 px-8 rounded-full text-lg shadow hover:bg-gray-300 transition-colors">Kembali</a>
             <button id="vote-btn" class="bg-indigo-600 text-white font-bold py-4 px-12 rounded-full text-xl shadow-lg <?php echo $has_voted ? 'disabled' : 'hover:bg-indigo-700'; ?> transition-colors" data-id="<?php echo $selectedCandidate['id']; ?>" data-nama="<?php echo htmlspecialchars($selectedCandidate['nama_lengkap']); ?>" <?php echo $has_voted ? 'disabled' : ''; ?>>
                 <?php echo $has_voted ? 'Sudah Vote' : 'VOTE'; ?>
             </button>

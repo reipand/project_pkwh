@@ -89,11 +89,21 @@ $pdf->SetTextColor(0, 0, 0);
 $pdf->SetY(60); // Sesuaikan posisi Y agar tidak menimpa header
 $pdf->Cell(0, 10, 'Total suara masuk: ' . $total_votes . ' dari ' . $total_voters . ' pemilih terdaftar.', 0, 1, 'C');
 
+// Ringkasan Status Memilih (teks saja)
+$votedCount = (int)$total_votes;
+$notVotedCount = max((int)$total_voters - $votedCount, 0);
+$votedPercent = ($total_voters > 0) ? round(($votedCount / $total_voters) * 100, 2) : 0;
+$notVotedPercent = ($total_voters > 0) ? round(($notVotedCount / $total_voters) * 100, 2) : 0;
+
 // Judul 'Persentase Hasil Suara'
 $pdf->SetY(80); // Sesuaikan posisi Y
 $pdf->SetFont('Helvetica', 'B', 14);
-$pdf->Cell(0, 10, 'Persentase Hasil Suara', 0, 1, 'C');
-$pdf->Ln(5);
+$pdf->Cell(0, 10, 'Ringkasan Status Memilih', 0, 1, 'C');
+$pdf->Ln(2);
+$pdf->SetFont('Helvetica', '', 12);
+$pdf->Cell(0, 8, 'Sudah Memilih: ' . $votedCount . ' orang (' . $votedPercent . '%)', 0, 1, 'C');
+$pdf->Cell(0, 8, 'Belum Memilih: ' . $notVotedCount . ' orang (' . $notVotedPercent . '%)', 0, 1, 'C');
+$pdf->Ln(6);
 
 // Tabel Hasil Suara
 $pdf->SetFont('Helvetica', 'B', 10);
@@ -109,45 +119,12 @@ foreach ($all_results as $kandidat) {
 }
 $pdf->Ln(10);
 
-// Judul 'Pemilih Sudah Memberikan Suara'
-$pdf->SetFont('Helvetica', 'B', 12);
-$pdf->Cell(0, 10, 'Pemilih Sudah Memberikan Suara (' . count($voted_list) . ')', 0, 1);
-$pdf->Ln(5);
+// Tidak menyisipkan pie chart gambar sesuai permintaan
 
-// Tabel Pemilih Sudah Memilih
-$pdf->SetFont('Helvetica', 'B', 10);
-$pdf->Cell(80, 7, 'Nama Lengkap', 1);
-$pdf->Cell(40, 7, 'NIS', 1, 1);
-$pdf->SetFont('Helvetica', '', 10);
-if (count($voted_list) > 0) {
-    foreach ($voted_list as $voter) {
-        $pdf->Cell(80, 7, $voter['nama_lengkap'], 1);
-        $pdf->Cell(40, 7, $voter['nis'], 1, 1);
-    }
-} else {
-    $pdf->Cell(120, 7, 'Tidak ada data.', 1, 1, 'C');
-}
-$pdf->Ln(10);
-
-// Judul 'Pemilih Belum Memberikan Suara'
-$pdf->SetFont('Helvetica', 'B', 12);
-$pdf->Cell(0, 10, 'Pemilih Belum Memberikan Suara (' . count($not_voted_list) . ')', 0, 1);
-$pdf->Ln(5);
-
-// Tabel Pemilih Belum Memilih
-$pdf->SetFont('Helvetica', 'B', 10);
-$pdf->Cell(80, 7, 'Nama Lengkap', 1);
-$pdf->Cell(40, 7, 'NIS', 1, 1);
-$pdf->SetFont('Helvetica', '', 10);
-if (count($not_voted_list) > 0) {
-    foreach ($not_voted_list as $voter) {
-        $pdf->Cell(80, 7, $voter['nama_lengkap'], 1);
-        $pdf->Cell(40, 7, $voter['nis'], 1, 1);
-    }
-} else {
-    $pdf->Cell(120, 7, 'Semua pemilih sudah memilih.', 1, 1, 'C');
-}
+// Bagian detail per nama dihilangkan sesuai permintaan
 
 // Outputkan PDF
 $pdf->Output("laporan-hasil-voting-" . date("Y-m-d") . ".pdf", "D");
+
+// Tidak ada file sementara untuk dihapus
 ?>

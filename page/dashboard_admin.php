@@ -222,19 +222,6 @@ $kandidat_with_proker = [
                             <div class="text-xs text-gray-400">Jumlah suara masuk</div>
                         </div>
                     </div>
-                    <div class="flex items-center gap-4">
-                        <div class="relative">
-                            <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-2xl font-bold text-blue-800" id="total-registered">0</span>
-                            <svg width="80" height="80" viewBox="0 0 100 100">
-                                <circle cx="50" cy="50" r="45" fill="none" stroke="#e5e7eb" stroke-width="8"></circle>
-                                <circle id="circle-total-registered" class="chart-circle" cx="50" cy="50" r="45" fill="none" stroke="#2563eb" stroke-width="8" stroke-dasharray="282.7" stroke-dashoffset="282.7"></circle>
-                            </svg>
-                        </div>
-                        <div>
-                            <div class="text-gray-700 font-semibold">New Registrations</div>
-                            <div class="text-xs text-gray-400">Pendaftar baru hari ini</div>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- //poster versi -->
@@ -339,6 +326,16 @@ $kandidat_with_proker = [
                 </div>
                 <p class="mt-4 text-xs text-red-500">Real Time</p>
             </div>
+
+            <div class="bg-white p-6 rounded-3xl shadow-lg mb-8 stat-card">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-lg font-bold text-gray-800">Status Memilih</span>
+                    <span class="text-gray-500 text-xs">Sudah vs Belum Memilih</span>
+                </div>
+                <div class="h-80 flex items-center justify-center">
+                    <canvas id="voteStatusChart"></canvas>
+                </div>
+            </div>
         </main>
     </div>
 
@@ -404,6 +401,7 @@ $kandidat_with_proker = [
     });
 });
     let myChart;
+    let statusChart;
     const colors = ['#4A148C', '#6A5ACD', '#7B68EE', '#9370DB', '#BA55D3', '#DA70D6'];
 
     function renderVoteResults(data) {
@@ -411,11 +409,10 @@ $kandidat_with_proker = [
 
     const totalVoters = data.total_voters || 0;
     const totalVotes = data.total_votes || 0;
-    const newRegistered = data.total_registered || 0;
     
     document.getElementById('total-voters').textContent = totalVoters;
     document.getElementById('total-votes').textContent = totalVotes;
-    document.getElementById('total-registered').textContent = newRegistered;
+    // elemen New Registrations dihapus
 
     const circumference = 2 * Math.PI * 45;
     
@@ -425,9 +422,7 @@ $kandidat_with_proker = [
     const offsetVotes = circumference - (percentVotes / 100) * circumference;
     document.getElementById('circle-total-votes').style.strokeDashoffset = offsetVotes;
     
-    const percentRegistered = totalVoters > 0 ? (newRegistered / totalVoters) * 100 : 0;
-    const offsetRegistered = circumference - (percentRegistered / 100) * circumference;
-    document.getElementById('circle-total-registered').style.strokeDashoffset = offsetRegistered;
+    // perhitungan dan update untuk New Registrations dihapus
 
         // Chart hasil vote
         // Hitung total suara untuk persentase
@@ -478,6 +473,41 @@ $kandidat_with_proker = [
                                         label += context.parsed.y + ' (' + percentage + ')';
                                     }
                                     return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        // Render/Update pie chart status memilih
+        const notVoted = Math.max(totalVoters - totalVotes, 0);
+        const statusCtx = document.getElementById('voteStatusChart').getContext('2d');
+        const pieColors = ['#4A148C', '#E5E7EB'];
+        if (statusChart) {
+            statusChart.data.datasets[0].data = [totalVotes, notVoted];
+            statusChart.update();
+        } else {
+            statusChart = new Chart(statusCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Sudah Memilih', 'Belum Memilih'],
+                    datasets: [{
+                        data: [totalVotes, notVoted],
+                        backgroundColor: pieColors,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => {
+                                    const val = ctx.raw || 0;
+                                    const percent = totalVoters > 0 ? (val / totalVoters * 100).toFixed(2) : 0;
+                                    return `${ctx.label}: ${val} (${percent}%)`;
                                 }
                             }
                         }

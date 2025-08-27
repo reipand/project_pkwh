@@ -1,12 +1,9 @@
 
 <aside class="w-64 bg-white p-6 shadow-md rounded-r-3xl flex flex-col items-center">
     <div class="flex items-center">
-        <img src="../assets/image/logo.png" alt="Logo" class="h-35 w-20 text-indigo-600 mr-2" />
+        <img src="../assets/image/logo.png" alt="Logo" class="h-32 w-auto text-indigo-600" />
     </div>
-    <div class="w-24 h-24 rounded-full bg-gray-200 overflow-hidden mb-4">
-        <img src="../assets/image/pp.jpg" alt="Profile Picture" class="w-full h-full object-cover">
-    </div>
-    <a href="#" class="text-indigo-600 font-medium text-sm hover:underline">View Profil →</a>
+    
 
     <nav class="mt-8 w-full">
         <ul class="space-y-2">

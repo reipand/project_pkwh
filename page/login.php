@@ -61,32 +61,23 @@ if (isset($_GET['error'])) {
         <form id="login-form" class="space-y-4" action="../api/login_siswa.php" method="POST" autocomplete="off">
             <div>
                 <label for="nis" class="block text-left text-sm font-medium text-gray-700">NIS Siswa</label>
-                <input id="nis" name="nis" type="text" autocomplete="off" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <input id="nis" name="nis" type="text" inputmode="numeric" pattern="\\d*" oninput="this.value=this.value.replace(/[^0-9]/g,'')" autocomplete="off" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
             </div>
             <div>
                 <div class="flex justify-between items-center">
                     <label for="password" class="block text-left text-sm font-medium text-gray-700">Password (Tanggal Lahir)</label>
-                    <a href="#" class="text-xs text-indigo-600 hover:text-indigo-500">Lupa Password?</a>
+                    
                 </div>
-                <input id="password" name="password" type="password" autocomplete="off" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <input id="password" name="password" type="password" inputmode="numeric" pattern="\\d*" oninput="this.value=this.value.replace(/[^0-9]/g,'')" autocomplete="off" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
             </div>
-            <div class="flex items-center">
-                <input id="remember" name="remember" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                <label for="remember" class="ml-2 block text-sm text-gray-900">
-                    Remember Tanggal Lahir
-                </label>
-            </div>
+            
             <div>
                 <button id="login-btn" type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     LOGIN
                 </button>
             </div>
         </form>
-        <div class="text-sm">
-            <p class="text-gray-600">
-                <a href="admin_login.php" class="font-medium text-indigo-600 hover:text-indigo-500">Sign in as an Admin</a>
-            </p>
-        </div>
+        
     </div>
     <p class="text-center text-gray-500 text-xs mt-4 w-full absolute bottom-4 left-0">
         &copy; 2025 BiVOTE. All rights reserved.

@@ -138,60 +138,24 @@ $koneksi->close();
     </div>
 </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="bg-white p-6 rounded-3xl shadow-lg">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Pemilih Sudah Memberikan Suara (<?php echo count($voted_list); ?>)</h2>
-                    <div class="table-container">
-                        <table class="min-w-full text-left">
-                            <thead>
-                                <tr class="text-gray-600 border-b">
-                                    <th class="py-2 px-4">Nama Lengkap</th>
-                                    <th class="py-2 px-4">NIS</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if (count($voted_list) > 0): ?>
-                                    <?php foreach ($voted_list as $voter): ?>
-                                        <tr class="border-b">
-                                            <td class="py-2 px-4"><?php echo htmlspecialchars($voter['nama_lengkap']); ?></td>
-                                            <td class="py-2 px-4"><?php echo htmlspecialchars($voter['nis']); ?></td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <tr>
-                                        <td colspan="2" class="py-4 text-center text-gray-500">Belum ada pemilih yang memberikan suara.</td>
-                                    </tr>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
+            <div class="bg-white p-6 rounded-3xl shadow-lg mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Status Memilih</h2>
+                <?php 
+                    $votedCount = (int)$total_votes; 
+                    $notVotedCount = max((int)$total_voters - $votedCount, 0);
+                    $votedPercent = ($total_voters > 0) ? round(($votedCount / $total_voters) * 100, 2) : 0;
+                    $notVotedPercent = ($total_voters > 0) ? round(($notVotedCount / $total_voters) * 100, 2) : 0;
+                ?>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="p-6 bg-gray-50 rounded-2xl text-center">
+                        <div class="text-4xl font-extrabold text-indigo-700 mb-2"><?php echo $votedPercent; ?>%</div>
+                        <div class="text-gray-700 font-semibold">Sudah Memilih</div>
+                        <div class="text-sm text-gray-500 mt-1"><?php echo $votedCount; ?> dari <?php echo $total_voters; ?> orang</div>
                     </div>
-                </div>
-
-                <div class="bg-white p-6 rounded-3xl shadow-lg">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Pemilih Belum Memberikan Suara (<?php echo count($not_voted_list); ?>)</h2>
-                    <div class="table-container">
-                        <table class="min-w-full text-left">
-                            <thead>
-                                <tr class="text-gray-600 border-b">
-                                    <th class="py-2 px-4">Nama Lengkap</th>
-                                    <th class="py-2 px-4">NIS</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if (count($not_voted_list) > 0): ?>
-                                    <?php foreach ($not_voted_list as $voter): ?>
-                                        <tr class="border-b">
-                                            <td class="py-2 px-4"><?php echo htmlspecialchars($voter['nama_lengkap']); ?></td>
-                                            <td class="py-2 px-4"><?php echo htmlspecialchars($voter['nis']); ?></td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <tr>
-                                        <td colspan="2" class="py-4 text-center text-gray-500">Semua pemilih sudah memberikan suara.</td>
-                                    </tr>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
+                    <div class="p-6 bg-gray-50 rounded-2xl text-center">
+                        <div class="text-4xl font-extrabold text-gray-700 mb-2"><?php echo $notVotedPercent; ?>%</div>
+                        <div class="text-gray-700 font-semibold">Belum Memilih</div>
+                        <div class="text-sm text-gray-500 mt-1"><?php echo $notVotedCount; ?> dari <?php echo $total_voters; ?> orang</div>
                     </div>
                 </div>
             </div>
