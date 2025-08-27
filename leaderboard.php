@@ -6,12 +6,6 @@
 
 session_start();
 
-// Check if user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php?error=unauthorized');
-    exit();
-}
-
 $page_title = "Leaderboard Siswa";
 
 // Asumsi file database.php sudah ada dan berfungsi
@@ -25,19 +19,22 @@ try {
     $database = new Database();
     $db = $database->getConnection();
     
-    // Query untuk mengambil data leaderboard dengan filter umur <= 18 tahun
+    // Leaderboard publik: hanya siswa diterima, usia <= 18, skor > 0
+    // Sorting: skor tertinggi dahulu, jika sama maka yang lebih tua diutamakan, lalu nama ASC
     $query = "
         SELECT 
             name, 
             score,
-            date_of_birth,
-            TIMESTAMPDIFF(YEAR, date_of_birth, CURDATE()) AS age
+            birth_date,
+            TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) AS age
         FROM 
             students
         WHERE 
-            status = 'accepted' AND TIMESTAMPDIFF(YEAR, date_of_birth, CURDATE()) <= 18
+            status = 'accepted' 
+            AND TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) <= 18
+            AND score > 0
         ORDER BY 
-            score DESC, name ASC
+            score DESC, age DESC, name ASC
     ";
     
     $stmt = $db->prepare($query);

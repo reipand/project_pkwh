@@ -57,7 +57,7 @@ try {
         WHERE 
             status = 'accepted' AND TIMESTAMPDIFF(YEAR, date_of_birth, CURDATE()) <= 18
         ORDER BY 
-            score DESC, name ASC
+            date_of_birth ASC, score DESC
     ";
     
     $stmt = $db->prepare($query);
@@ -386,6 +386,22 @@ include 'includes/header.php';
                     <i class="fas fa-info-circle me-2"></i>
                     Informasi Penting
                 </h3>
+                <?php if (($student['payment_status'] ?? 'unpaid') === 'rejected'): ?>
+                    <div class="alert alert-danger">
+                        <i class="fas fa-times-circle me-2"></i>
+                        <strong>Bukti pembayaran Anda ditolak.</strong><br>
+                        <?php if (!empty($student['notes'])): ?>
+                            Alasan penolakan: <em><?php echo htmlspecialchars($student['notes']); ?></em>
+                        <?php else: ?>
+                            Silakan unggah ulang bukti pembayaran sesuai ketentuan yang benar.
+                        <?php endif; ?>
+                        <div class="mt-2">
+                            <a href="payment.php" class="btn btn-sm btn-danger">
+                                <i class="fas fa-upload me-1"></i> Unggah Ulang Bukti Pembayaran
+                            </a>
+                        </div>
+                    </div>
+                <?php endif; ?>
                 
                 <?php if ($student['status'] === 'pending'): ?>
                     <div class="alert alert-warning">
@@ -395,19 +411,21 @@ include 'includes/header.php';
                         Anda akan mendapat notifikasi melalui email atau WhatsApp setelah verifikasi selesai.
                     </div>
                 <?php elseif ($student['status'] === 'accepted'): ?>
-                    <?php if (!$student['payment_proof']): ?>
-                    <div class="alert alert-success">
-                        <i class="fas fa-check-circle me-2"></i>
-                        <strong>Selamat! Pendaftaran Anda telah diterima.</strong><br>
-                        Silakan lakukan pembayaran dan upload bukti pembayaran untuk melanjutkan proses pendaftaran.
-                    </div>
-                    <?php else: ?>
-                    <div class="alert alert-info">
-                        <i class="fas fa-upload me-2"></i>
-                        <strong>Bukti pembayaran telah diupload.</strong><br>
-                        Tim admin akan memverifikasi bukti pembayaran Anda dalam waktu 1-3 hari kerja.
-                        Status akan diperbarui setelah verifikasi selesai.
-                    </div>
+                    <?php if (($student['payment_status'] ?? 'unpaid') !== 'rejected'): ?>
+                        <?php if (!$student['payment_proof']): ?>
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <strong>Selamat! Pendaftaran Anda telah diterima.</strong><br>
+                            Silakan lakukan pembayaran dan upload bukti pembayaran untuk melanjutkan proses pendaftaran.
+                        </div>
+                        <?php else: ?>
+                        <div class="alert alert-info">
+                            <i class="fas fa-upload me-2"></i>
+                            <strong>Bukti pembayaran telah diupload.</strong><br>
+                            Tim admin akan memverifikasi bukti pembayaran Anda dalam waktu 1-3 hari kerja.
+                            Status akan diperbarui setelah verifikasi selesai.
+                        </div>
+                        <?php endif; ?>
                     <?php endif; ?>
                 <?php elseif ($student['status'] === 'rejected'): ?>
                     <div class="alert alert-danger">
@@ -441,6 +459,13 @@ include 'includes/header.php';
                     Galeri Sekolah
                 </a>
                 
+                <?php if (($student['payment_status'] ?? 'unpaid') === 'rejected'): ?>
+                <a href="payment.php" class="action-btn btn-danger-custom">
+                    <i class="fas fa-upload me-2"></i>
+                    Unggah Ulang Bukti Pembayaran
+                </a>
+                <?php endif; ?>
+
                 <a href="logout.php" class="action-btn btn-danger-custom">
                     <i class="fas fa-sign-out-alt me-2"></i>
                     Logout
